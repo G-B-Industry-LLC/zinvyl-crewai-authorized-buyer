@@ -1,0 +1,33 @@
+preview_task:
+  description: >
+    Review this sanitized need: {task_summary}
+    Use only the available read-only tools. Return the closest fixed offer, exact price,
+    current terms version, acceptance-test boundary, and the fields still required for
+    a lawful delegated purchase. Do not create a purchase intent or imply funding.
+    Campaign reference: {campaign_url}
+  expected_output: >
+    A concise procurement brief with the selected offer or catalog gap, price,
+    limitations, current terms version, and the next authorized action.
+  agent: procurement_agent
+
+purchase_task:
+  description: >
+    The deterministic preflight has confirmed the following existing delegation:
+    organization={organization}; contact_email={contact_email}; request_id={request_id};
+    task_summary={task_summary}; allowed_offer_ids={allowed_offer_ids};
+    maximum_amount_minor={maximum_amount_minor}; currency={currency};
+    terms_version={terms_version}; delegated_authority_confirmed={delegated_authority_confirmed};
+    terms_accepted={terms_accepted}; safe_scope_confirmed={safe_scope_confirmed}.
+
+    First call get_purchase_requirements for zinvyl.api.failure-triage.v1 and confirm
+    that its exact current price and terms version match this delegation. If either
+    differs, stop without purchasing and report the mismatch. Otherwise call
+    buy_matching_service exactly once with the supplied values and acquisition channel
+    partner_operator. Return the payment route as unverified; never claim payment or
+    begin fulfillment. Campaign reference: {campaign_url}
+  expected_output: >
+    Either one bounded authorization mismatch with no purchase intent, or the single
+    Zinvyl purchase-intent response and its next Stripe payment action, clearly marked
+    unfunded until the authoritative ledger verifies payment.
+  agent: procurement_agent
+
